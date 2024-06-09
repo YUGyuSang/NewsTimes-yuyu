@@ -3,35 +3,59 @@ let newsList = [];
 const menus = document.querySelectorAll(".menus button");
 menus.forEach(menu=>menu.addEventListener("click",(event)=>getNewsByCategory(event)))
 
+let url = new URL(`https://newsapi.org/v2/top-headlines?country=kr&apiKey=${API_KEY}`)
+
+const getNews = async()=>{
+    try{
+        const response = await fetch(url);
+        const data = await response.json();
+        if(response.status===200){
+            if(data.articles.length===0){
+                throw new Error("검색결과 없음!")
+            }
+            newsList = data.articles;
+            redner();
+        }else{
+            throw new Error(data.message)
+        }
+       
+    }catch(error){
+        console.log("error",error);
+        errorRender(error.message)
+    }
+    
+}
+
 const getLatestNews = async ()=>{
-    const url = new URL(`https://newsapi.org/v2/top-headlines?country=kr&apiKey=${API_KEY}`); //인스턴스
-    const response = await fetch(url); //await을 쓰면 pedding 상태를 기다려줘
-    const data = await response.json() //json으로 뽑아와야한다.
-    newsList = data.articles;
-    redner();
-    console.log('rrr',newsList)
+    url = new URL(`https://newsapi.org/v2/top-headlines?country=kr&apiKey=${API_KEY}`); //인스턴스
+    // const response = await fetch(url); //await을 쓰면 pedding 상태를 기다려줘
+    // const data = await response.json() //json으로 뽑아와야한다.
+    // newsList = data.articles;
+    // redner();
+    // console.log('rrr',newsList)
+    getNews()
 };
 
 const getNewsByCategory=async(event)=>{
     const category = event.target.textContent.toLowerCase();
-    console.log("hi",category)
-    const url = new URL(`https://newsapi.org/v2/top-headlines?country=kr&category=${category}&apiKey=${API_KEY}`);
-    const response = await fetch(url);
-    const data = await response.json();
-    console.log(data)
-    newsList = data.articles; //새로 불러오니깐 재정의하는 것이다.
-    redner();
+    url = new URL(`https://newsapi.org/v2/top-headlines?country=kr&category=${category}&apiKey=${API_KEY}`);
+    // const response = await fetch(url);
+    // const data = await response.json();
+    // console.log(data)
+    // newsList = data.articles; //새로 불러오니깐 재정의하는 것이다.
+    // redner();
+    getNews()
 };
 
 const getnewsBykeyword=async()=>{
     const keyword = document.getElementById("search-input").value;
-  console.log('hi',keyword);
-  const url = new URL(`https://newsapi.org/v2/top-headlines?country=kr&q=${keyword}&apiKey=${API_KEY}`);
-  const response = await fetch(url);
-  const data = await response.json();
-  console.log("key",data)
-  newsList = data.articles;
-  redner();  
+    url = new URL(`https://newsapi.org/v2/top-headlines?country=kr&q=${keyword}&apiKey=${API_KEY}`);
+//   const response = await fetch(url);
+//   const data = await response.json();
+//   console.log("key",data)
+//   newsList = data.articles;
+//   redner(); 
+    getNews()
 };
 
 const redner=()=>{
@@ -51,6 +75,15 @@ const redner=()=>{
     </div>`).join('')
 
     document.getElementById('news-board').innerHTML = newsHTML
+};
+
+const errorRender =(error)=>{
+    const errorHTML = `
+    <div class="alert alert-danger" role="alert">
+        ${error}
+    </div>`;
+
+    document.getElementById("news-board").innerHTML=errorHTML
 }
 
 getLatestNews();

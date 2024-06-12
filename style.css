@@ -45,3 +45,11 @@
 .search-bar{
     margin-top: 20px;
 }
+
+.pagination{
+    justify-content: center;
+}
+
+.pagination-nav{
+    margin-top: 20px;
+}

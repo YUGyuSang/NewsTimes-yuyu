@@ -108,7 +108,7 @@ const paginationReder=()=>{
     //firstPage
     const firstPage = lastPage - (groupSize - 1)<=0? 1:lastPage - (groupSize - 1);
 
-    let paginationHTML = page===firstPage?'':`<li class="page-item disabled" onclick="moveToPage(${page-1})"><a class="page-link">Previous</a></li>`
+    let paginationHTML = page===firstPage?'':`<li class="page-item" onclick="moveToPage(${page-1})"><a class="page-link">Previous</a></li>`
 
     for(let i=firstPage;i<=lastPage;i++){
         paginationHTML+=`<li class="page-item  ${i===page?'active':''}" onclick="moveToPage(${i})"><a class="page-link" href="#">${i}</a></li>`
